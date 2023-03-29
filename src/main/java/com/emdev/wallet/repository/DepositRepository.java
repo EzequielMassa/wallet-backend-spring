@@ -8,15 +8,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account,Integer> {
-
-    Optional<Account> findByAccountId(Integer accountId);
-
-    @Query("SELECT dep FROM Account acc join acc.deposits dep WHERE acc.accountId = :id")
-    List<Deposit> findDepositsByAccount(@Param("id") Integer Id);
+public interface DepositRepository extends JpaRepository<Deposit,Integer> {
 
 }
