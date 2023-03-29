@@ -1,5 +1,7 @@
 package com.emdev.wallet.user;
 
+import com.emdev.wallet.model.Account;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +36,12 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+
+    @OneToMany(targetEntity = Account.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "fkUserId", referencedColumnName = "id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<Account> accounts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

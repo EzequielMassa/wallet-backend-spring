@@ -1,6 +1,7 @@
 package com.emdev.wallet.auth;
 
 import com.emdev.wallet.config.JwtService;
+import com.emdev.wallet.model.Account;
 import com.emdev.wallet.user.Role;
 import com.emdev.wallet.user.User;
 import com.emdev.wallet.user.UserRepository;
@@ -9,6 +10,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +24,15 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        var accounts = new ArrayList<Account>();
+        accounts.add(new Account());
         var user = User.builder()
                 .firstName(request.getFirstname())
                 .lastName(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .accounts(accounts)
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -35,6 +42,7 @@ public class AuthenticationService {
                 .lastname(user.getLastName())
                 .email(user.getUsername())
                 .token(jwtToken)
+                .accounts(user.getAccounts())
                 .build();
     }
 
@@ -51,6 +59,7 @@ public class AuthenticationService {
                 .lastname(user.getLastName())
                 .email(user.getUsername())
                 .token(jwtToken)
+                .accounts(user.getAccounts())
                 .build();
     }
 }
