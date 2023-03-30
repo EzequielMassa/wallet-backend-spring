@@ -24,7 +24,11 @@ public class DepositController {
         return ResponseEntity.ok(accountDeposits);
     }
 
-    //TODO: GETMAPPING FOR ONE DESPOSIT
+    @GetMapping("/getDeposit/id/{id}")
+    public ResponseEntity<Deposit> getAccountDeposit(@PathVariable("id") Integer id){
+        Deposit accountDeposit = depositService.getDeposit(id);
+        return ResponseEntity.ok(accountDeposit);
+    }
 
     @PostMapping("/newDeposit/{id}")
     public ResponseEntity<Deposit> createDeposit(@PathVariable("id") Integer id,@RequestBody Deposit deposit){

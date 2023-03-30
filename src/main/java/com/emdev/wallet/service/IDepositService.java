@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class IDepositService implements DepositService{
+public class IDepositService implements DepositService {
 
     @Autowired
     private AccountRepository accountRepository;
@@ -27,20 +27,20 @@ public class IDepositService implements DepositService{
 
     @Override
     public Deposit getDeposit(Integer depositId) {
-        return null;
+        return depositRepository.findById(depositId).orElse(null);
     }
 
     @Override
     public Deposit createDeposit(Integer accountId, Deposit deposit) {
         Account account = accountRepository.findByAccountId(accountId).orElse(null);
-        Deposit newDeposit = new Deposit(deposit.getAmount(),deposit.getDescription());
+        Deposit newDeposit = new Deposit(deposit.getAmount(), deposit.getDescription());
 
 
         account.setBalance(newDeposit.getAmount());
         account.getDeposits().add(newDeposit);
 
 
-        return    depositRepository.save(newDeposit);
+        return depositRepository.save(newDeposit);
 
     }
 
