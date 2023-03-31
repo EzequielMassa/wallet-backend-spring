@@ -1,5 +1,6 @@
 package com.emdev.wallet.service;
 
+import com.emdev.wallet.model.Movements;
 import com.emdev.wallet.model.Payment;
 import com.emdev.wallet.model.Account;
 import com.emdev.wallet.repository.AccountRepository;
@@ -40,8 +41,10 @@ public class IPaymentService implements PaymentService {
         }
 
         try {
+            Movements newMovements = new Movements(newPayment.getAmount(), newPayment.getDescription(),newPayment.getType());
             account.setPayment(newPayment.getAmount());
             account.getPayments().add(newPayment);
+            account.getMovements().add(newMovements);
 
             return paymentRepository.save(newPayment);
         } catch (Exception e) {

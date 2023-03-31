@@ -37,6 +37,11 @@ public class Account implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Transfer> transfers = new ArrayList<>();
 
+    @OneToMany(targetEntity = Movements.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "fkAccountId", referencedColumnName = "accountId")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<Movements> movements = new ArrayList<>();
+
 
 
 

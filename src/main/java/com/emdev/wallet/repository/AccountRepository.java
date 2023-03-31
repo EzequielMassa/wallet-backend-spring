@@ -1,9 +1,6 @@
 package com.emdev.wallet.repository;
 
-import com.emdev.wallet.model.Payment;
-import com.emdev.wallet.model.Account;
-import com.emdev.wallet.model.Deposit;
-import com.emdev.wallet.model.Transfer;
+import com.emdev.wallet.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,5 +23,8 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
 
     @Query("SELECT trans FROM Account acc join acc.transfers trans WHERE acc.accountId = :id")
     List<Transfer> findTransfersByAccount(@Param("id") Integer Id);
+
+    @Query("SELECT mov FROM Account acc join acc.movements mov WHERE acc.accountId = :id")
+   Optional<List<Movements>> findMovementsByAccount(@Param("id") Integer Id);
 
 }

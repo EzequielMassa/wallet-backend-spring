@@ -2,6 +2,7 @@ package com.emdev.wallet.service;
 
 import com.emdev.wallet.model.Account;
 import com.emdev.wallet.model.Deposit;
+import com.emdev.wallet.model.Movements;
 import com.emdev.wallet.repository.AccountRepository;
 import com.emdev.wallet.repository.DepositRepository;
 import jakarta.transaction.Transactional;
@@ -34,10 +35,13 @@ public class IDepositService implements DepositService {
     public Deposit createDeposit(Integer accountId, Deposit deposit) {
         Account account = accountRepository.findByAccountId(accountId).orElse(null);
         Deposit newDeposit = new Deposit(deposit.getAmount(), deposit.getDescription());
+        Movements newMovements = new Movements(deposit.getAmount(), deposit.getDescription(),newDeposit.getType());
 
 
         account.setBalance(newDeposit.getAmount());
         account.getDeposits().add(newDeposit);
+        account.getMovements().add(newMovements);
+
 
 
         return depositRepository.save(newDeposit);

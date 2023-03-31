@@ -1,5 +1,6 @@
 package com.emdev.wallet.model;
 
+import com.emdev.wallet.types.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,8 +20,12 @@ public class Payment {
     private Double amount;
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
+
     public Payment(Double amount, String description) {
         this.amount = amount;
         this.description = description;
+        this.type = TransactionType.PAYMENT;
     }
 }

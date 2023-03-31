@@ -1,19 +1,21 @@
 package com.emdev.wallet.service;
 
-import com.emdev.wallet.model.Account;
-import com.emdev.wallet.model.Transfer;
-import com.emdev.wallet.repository.AccountRepository;
-import com.emdev.wallet.repository.TransferRepository;
-import jakarta.transaction.Transactional;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.emdev.wallet.model.Account;
+import com.emdev.wallet.model.Movements;
+import com.emdev.wallet.model.Transfer;
+import com.emdev.wallet.repository.AccountRepository;
+import com.emdev.wallet.repository.TransferRepository;
 
+import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
-public class ITransferService implements TransferService{
+public class ITransferService implements TransferService {
 
     @Autowired
     private AccountRepository accountRepository;
@@ -31,21 +33,33 @@ public class ITransferService implements TransferService{
     }
 
     @Override
-    public Transfer createTransfer(Integer accountOriginId, Integer accountDestinyId, Transfer transfer) throws Exception {
+    public Transfer createTransfer(Integer accountOriginId, Integer accountDestinyId, Transfer transfer)
+            throws Exception {
         Account originAccount = accountRepository.findByAccountId(accountOriginId).orElse(null);
         Account destinyAccount = accountRepository.findByAccountId(accountDestinyId).orElse(null);
-        if(originAccount.getBalance() < transfer.getAmount()) {
-            throw  new Exception("saldo insuficiente");
+
+        if (originAccount.getBalance() < transfer.getAmount()) {
+            throw new Exception("saldo insuficiente");
         }
         try {
-            Transfer newTransfer = new Transfer(transfer.getAmount(), transfer.getDescription());
+            Transfer newTransferOrigin = new Transfer(transfer.getAmount(), transfer.getDescription());
+            Transfer newTransferDestiny = new Transfer(transfer.getAmount(), transfer.getDescription());
+            Movements newMovementsOrigin = new Movements(transfer.getAmount(), transfer.getDescription(),
+                    newTransferOrigin.getType());
+            Movements newMovementsDestiny = new Movements(transfer.getAmount(), transfer.getDescription(),
+                    newTransferDestiny.getType());
             originAccount.setPayment(transfer.getAmount());
             destinyAccount.setBalance(transfer.getAmount());
-            originAccount.getTransfers().add(newTransfer);
-            destinyAccount.getTransfers().add(newTransfer);
-            return transferRepository.save(newTransfer);
+            originAccount.getTransfers().add(newTransferOrigin);
+            originAccount.getMovements().add(newMovementsOrigin);
+            destinyAccount.getTransfers().add(newTransferDestiny);
+            destinyAccount.getMovements().add(newMovementsDestiny);
 
-        }catch (Exception e){
+            transferRepository.save(newTransferDestiny);
+
+            return transferRepository.save(newTransferOrigin);
+
+        } catch (Exception e) {
             throw e;
         }
     }
