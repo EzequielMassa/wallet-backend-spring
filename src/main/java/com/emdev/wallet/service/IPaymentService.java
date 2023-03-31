@@ -1,0 +1,55 @@
+package com.emdev.wallet.service;
+
+import com.emdev.wallet.model.Payment;
+import com.emdev.wallet.model.Account;
+import com.emdev.wallet.repository.AccountRepository;
+import com.emdev.wallet.repository.PaymentRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+
+@Service
+@Transactional
+public class IPaymentService implements PaymentService {
+
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Override
+    public List<Payment> getAccountPayments(Integer accountId) {
+        return accountRepository.findPaymentsByAccount(accountId);
+    }
+
+    @Override
+    public Payment getPayment(Integer paymentId) {
+        return paymentRepository.findById(paymentId).orElse(null);
+    }
+
+    @Override
+    public Payment createPayment(Integer accountId, Payment payment) throws Exception {
+        Account account = accountRepository.findByAccountId(accountId).orElse(null);
+        Payment newPayment = new Payment(payment.getAmount(),payment.getDescription());
+
+        if(account.getBalance() < newPayment.getAmount()) {
+            throw  new Exception("saldo insuficiente");
+        }
+
+        try {
+            account.setPayment(newPayment.getAmount());
+            account.getPayments().add(newPayment);
+
+            return paymentRepository.save(newPayment);
+        } catch (Exception e) {
+            throw e;
+        }
+
+
+
+    }
+
+}

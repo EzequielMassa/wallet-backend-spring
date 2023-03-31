@@ -1,6 +1,5 @@
 package com.emdev.wallet.service;
 
-import com.emdev.wallet.model.Account;
 import com.emdev.wallet.model.Deposit;
 
 import java.util.List;

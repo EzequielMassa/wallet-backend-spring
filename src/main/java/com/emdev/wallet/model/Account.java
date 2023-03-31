@@ -25,13 +25,32 @@ public class Account implements Serializable {
     @OneToMany(targetEntity = Deposit.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "fkAccountId", referencedColumnName = "accountId")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private List<Deposit> deposits = new ArrayList<Deposit>();
+    private List<Deposit> deposits = new ArrayList<>();
+
+    @OneToMany(targetEntity = Payment.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "fkAccountId", referencedColumnName = "accountId")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<Payment> payments = new ArrayList<>();
+
+    @OneToMany(targetEntity = Transfer.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "fkAccountId", referencedColumnName = "accountId")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private List<Transfer> transfers = new ArrayList<>();
+
+
+
+
     public Account() {
         this.balance = 0.0;
     }
 
     public Double setBalance(Double value){
        return this.balance += value;
+    }
+
+    public Double setPayment(Double value){
+
+        return this.balance -= value;
     }
 
 
