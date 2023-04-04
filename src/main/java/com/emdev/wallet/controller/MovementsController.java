@@ -15,7 +15,6 @@ import com.emdev.wallet.service.IMovementsService;
 
 @RestController
 @RequestMapping("/api/v1/movements")
-@CrossOrigin(origins = "*")
 public class MovementsController {
 
     @Autowired
