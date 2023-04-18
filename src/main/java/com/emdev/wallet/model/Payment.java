@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 @Data
 @Entity
@@ -23,9 +25,12 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 
+    private Date date;
+
     public Payment(Double amount, String description) {
         this.amount = amount;
         this.description = description;
+        this.date = new Date(System.currentTimeMillis());
         this.type = TransactionType.PAYMENT;
     }
 }

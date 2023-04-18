@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -41,7 +43,7 @@ public class IPaymentService implements PaymentService {
         }
 
         try {
-            Movements newMovements = new Movements(newPayment.getAmount(), newPayment.getDescription(),newPayment.getType());
+            Movements newMovements = new Movements(newPayment.getAmount(), newPayment.getDescription(), newPayment.getDate() ,newPayment.getType());
             account.setPayment(newPayment.getAmount());
             account.getPayments().add(newPayment);
             account.getMovements().add(newMovements);

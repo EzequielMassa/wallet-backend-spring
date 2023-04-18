@@ -9,6 +9,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -32,10 +35,11 @@ public class IDepositService implements DepositService {
     }
 
     @Override
-    public Deposit createDeposit(Integer accountId, Deposit deposit) {
+    public Deposit createDeposit(Integer accountId, Deposit deposit) throws ParseException {
         Account account = accountRepository.findByAccountId(accountId).orElse(null);
+
         Deposit newDeposit = new Deposit(deposit.getAmount(), deposit.getDescription());
-        Movements newMovements = new Movements(deposit.getAmount(), deposit.getDescription(),newDeposit.getType());
+        Movements newMovements = new Movements(deposit.getAmount(), deposit.getDescription(),newDeposit.getDate(),newDeposit.getType());
 
 
         account.setBalance(newDeposit.getAmount());

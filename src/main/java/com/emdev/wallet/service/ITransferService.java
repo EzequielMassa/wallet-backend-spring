@@ -1,7 +1,10 @@
 package com.emdev.wallet.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import com.emdev.wallet.types.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,11 +45,11 @@ public class ITransferService implements TransferService {
             throw new Exception("saldo insuficiente");
         }
         try {
-            Transfer newTransferOrigin = new Transfer(transfer.getAmount(), transfer.getDescription());
-            Transfer newTransferDestiny = new Transfer(transfer.getAmount(), transfer.getDescription());
-            Movements newMovementsOrigin = new Movements(transfer.getAmount(), transfer.getDescription(),
+            Transfer newTransferOrigin = new Transfer(transfer.getAmount(), transfer.getDescription(), TransactionType.TRANSFER_OUT);
+            Transfer newTransferDestiny = new Transfer(transfer.getAmount(), transfer.getDescription(),TransactionType.TRANSFER_IN);
+            Movements newMovementsOrigin = new Movements(transfer.getAmount(), transfer.getDescription(), newTransferOrigin.getDate(),
                     newTransferOrigin.getType());
-            Movements newMovementsDestiny = new Movements(transfer.getAmount(), transfer.getDescription(),
+            Movements newMovementsDestiny = new Movements(transfer.getAmount(), transfer.getDescription(), newTransferDestiny.getDate(),
                     newTransferDestiny.getType());
             originAccount.setPayment(transfer.getAmount());
             destinyAccount.setBalance(transfer.getAmount());

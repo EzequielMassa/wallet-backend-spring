@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -30,7 +31,7 @@ public class DepositController {
     }
 
     @PostMapping("/newDeposit/{id}")
-    public ResponseEntity<Deposit> createDeposit(@PathVariable("id") Integer id,@RequestBody Deposit deposit){
+    public ResponseEntity<Deposit> createDeposit(@PathVariable("id") Integer id,@RequestBody Deposit deposit) throws ParseException {
         Deposit newDeposit = depositService.createDeposit(id,deposit);
         return ResponseEntity.ok(newDeposit);
     }

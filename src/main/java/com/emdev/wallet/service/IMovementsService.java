@@ -19,7 +19,7 @@ public class IMovementsService implements MovementsService{
 
     @Override
     public List<Movements> getAccountMovements(Integer accountId) {
-        return accountRepository.findMovementsByAccount(accountId).orElse(null);
+        return accountRepository.findMovementsByAccountOrderByDateDesc(accountId).orElse(null);
     }
 
 }

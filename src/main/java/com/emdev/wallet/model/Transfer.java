@@ -4,6 +4,8 @@ import com.emdev.wallet.types.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 
 @Data
 @Entity
@@ -19,14 +21,15 @@ public class Transfer {
 
     private Double amount;
     private String description;
+    private Date date;
 
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 
-    public Transfer(Double amount, String description) {
+    public Transfer(Double amount, String description , TransactionType type) {
         this.amount = amount;
         this.description = description;
-
-        this.type = TransactionType.TRANSFER;
+        this.date = new Date(System.currentTimeMillis());
+        this.type = type;
     }
 }

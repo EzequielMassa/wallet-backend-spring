@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 @Data
 @Entity
@@ -21,13 +23,17 @@ public class Movements {
 
     private Double amount;
     private String description;
+    private Date date;
 
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 
-    public Movements(Double amount, String description, TransactionType type) {
+
+
+    public Movements(Double amount, String description, Date date ,TransactionType type) {
         this.amount = amount;
         this.description = description;
+        this.date = date;
         this.type = type;
     }
 

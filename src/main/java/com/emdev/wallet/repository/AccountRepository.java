@@ -24,7 +24,8 @@ public interface AccountRepository extends JpaRepository<Account,Integer> {
     @Query("SELECT trans FROM Account acc join acc.transfers trans WHERE acc.accountId = :id")
     List<Transfer> findTransfersByAccount(@Param("id") Integer Id);
 
-    @Query("SELECT mov FROM Account acc join acc.movements mov WHERE acc.accountId = :id")
-   Optional<List<Movements>> findMovementsByAccount(@Param("id") Integer Id);
+    @Query("SELECT mov FROM Account acc join acc.movements mov WHERE acc.accountId  = :id order by mov.date DESC")
+   Optional<List<Movements>> findMovementsByAccountOrderByDateDesc(@Param("id") Integer Id);
+
 
 }
