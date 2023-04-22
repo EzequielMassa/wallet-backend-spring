@@ -1,16 +1,15 @@
 package com.emdev.wallet.service;
 
+import com.emdev.wallet.model.Account;
+import com.emdev.wallet.model.Expenses;
 import com.emdev.wallet.model.Movements;
 import com.emdev.wallet.model.Payment;
-import com.emdev.wallet.model.Account;
 import com.emdev.wallet.repository.AccountRepository;
 import com.emdev.wallet.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
@@ -43,7 +42,9 @@ public class IPaymentService implements PaymentService {
         }
 
         try {
+            Expenses newExpense = new Expenses(newPayment.getDate(),newPayment.getAmount(),account.getAccountId());
             Movements newMovements = new Movements(newPayment.getAmount(), newPayment.getDescription(), newPayment.getDate() ,newPayment.getType());
+            newMovements.getExpenses().add(newExpense);
             account.setPayment(newPayment.getAmount());
             account.getPayments().add(newPayment);
             account.getMovements().add(newMovements);

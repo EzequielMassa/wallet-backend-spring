@@ -2,6 +2,7 @@ package com.emdev.wallet.service;
 
 import com.emdev.wallet.model.Account;
 import com.emdev.wallet.model.Deposit;
+import com.emdev.wallet.model.Incomings;
 import com.emdev.wallet.model.Movements;
 import com.emdev.wallet.repository.AccountRepository;
 import com.emdev.wallet.repository.DepositRepository;
@@ -39,7 +40,9 @@ public class IDepositService implements DepositService {
         Account account = accountRepository.findByAccountId(accountId).orElse(null);
 
         Deposit newDeposit = new Deposit(deposit.getAmount(), deposit.getDescription());
+        Incomings newIncoming = new Incomings(newDeposit.getDate(), newDeposit.getAmount(), account.getAccountId());
         Movements newMovements = new Movements(deposit.getAmount(), deposit.getDescription(),newDeposit.getDate(),newDeposit.getType());
+        newMovements.getIncomings().add(newIncoming);
 
 
         account.setBalance(newDeposit.getAmount());
