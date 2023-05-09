@@ -18,5 +18,6 @@ public class AuthenticationResponse {
     private String email;
 
     private String token;
+    private String urlImg;
 
 }

@@ -34,6 +34,8 @@ public class User implements UserDetails {
 
     private String password;
 
+    private String urlImg;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

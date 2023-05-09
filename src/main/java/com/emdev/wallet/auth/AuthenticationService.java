@@ -34,6 +34,7 @@ public class AuthenticationService {
                                 .password(passwordEncoder.encode(request.getPassword()))
                                 .role(Role.USER)
                                 .accounts(accounts)
+                                .urlImg("https://cdn-icons-png.flaticon.com/128/149/149071.png")
                                 .build();
                 userRepository.save(user);
                 var jwtToken = jwtService.generateToken(user);
@@ -43,6 +44,7 @@ public class AuthenticationService {
                                 .lastname(user.getLastName())
                                 .email(user.getUsername())
                                 .token(jwtToken)
+                                .urlImg(user.getUrlImg())
                                 .build();
         }
 
@@ -58,6 +60,7 @@ public class AuthenticationService {
                                 .lastname(user.getLastName())
                                 .email(user.getUsername())
                                 .token(jwtToken)
+                                .urlImg(user.getUrlImg())
                                 .build();
         }
 }
