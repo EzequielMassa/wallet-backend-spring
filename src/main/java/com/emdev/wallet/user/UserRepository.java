@@ -11,6 +11,8 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
     Optional<User> findByEmail(String email);
+    Optional<User> findByTokenPassword(String tokenPassword);
+    boolean existsByEmail(String email);
 
     @Query("SELECT acc FROM User us join us.accounts acc WHERE us.id = :id")
     List<Account> findAccountsByUser(@Param("id") Integer Id);

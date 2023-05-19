@@ -6,12 +6,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> getUserByTokenPassword(String tokenPassword) {
+        return userRepository.findByTokenPassword(tokenPassword);
+    }
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public void save(User usuario) {
+         userRepository.save(usuario);
+    }
 
     public AuthenticationResponse updateUser(UserRequest request) {
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
@@ -55,4 +72,6 @@ public class UserService {
                 .urlImg(updatedUser.getUrlImg())
                 .build();
     }
+
+
 }
