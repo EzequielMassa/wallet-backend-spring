@@ -5,6 +5,7 @@ import com.emdev.wallet.dto.EmailValuesDto;
 import com.emdev.wallet.service.EmailService;
 import com.emdev.wallet.user.User;
 import com.emdev.wallet.user.UserService;
+import com.emdev.wallet.utils.Mensaje;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,7 @@ public class EmailController {
     public ResponseEntity<?> sendEmailTemplate(@RequestBody EmailValuesDto dto) {
         Optional<User> usuarioOpt = userService.getUserByEmail(dto.getMailTo());
        if (!usuarioOpt.isPresent())
-           return new ResponseEntity<>("No existe el usuario", HttpStatus.NOT_FOUND);
+           return new ResponseEntity<>(new Mensaje("No existe el usuario con ese correo"), HttpStatus.NOT_FOUND);
        User usuario = usuarioOpt.get();
 
         dto.setMailFrom(emailFrom);
@@ -51,25 +52,25 @@ public class EmailController {
         usuario.setTokenPassword(tokenPassword);
         userService.save(usuario);
         emailService.sendEmail(dto);
-        return new ResponseEntity<>("Te hemos enviado un correo", HttpStatus.OK);
+        return new ResponseEntity<>(new Mensaje("Te hemos enviado un correo"), HttpStatus.OK);
     }
 
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDto dto, BindingResult bindingResult) {
          if (bindingResult.hasErrors()){
-             return new ResponseEntity<>("Campos mal puestos", HttpStatus.BAD_REQUEST);
+             return new ResponseEntity<>(new Mensaje("Campos invalidos"), HttpStatus.BAD_REQUEST);
          }
          if (!dto.getPassword().equals(dto.getConfirmPassword())){
-             return new ResponseEntity<>("Las contraseñas no coinciden", HttpStatus.BAD_REQUEST);
+             return new ResponseEntity<>(new Mensaje("Las contraseñas no coinciden"), HttpStatus.BAD_REQUEST);
          }
          Optional<User> usuarioOpt = userService.getUserByTokenPassword(dto.getTokenPassword());
         if (!usuarioOpt.isPresent())
-            return new ResponseEntity<>("No existe el usuario", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new Mensaje("No existe el usuario"), HttpStatus.NOT_FOUND);
         User usuario = usuarioOpt.get();
         String newPassword = passwordEncoder.encode(dto.getPassword());
         usuario.setPassword(newPassword);
         usuario.setTokenPassword(null);
         userService.save(usuario);
-        return new ResponseEntity<>("Contraseña actualizada con exito",HttpStatus.OK);
+        return new ResponseEntity<>(new Mensaje("Contraseña actualizada con exito"),HttpStatus.OK);
     }
 }
