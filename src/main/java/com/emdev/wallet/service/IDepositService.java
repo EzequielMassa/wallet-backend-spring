@@ -1,20 +1,19 @@
 package com.emdev.wallet.service;
 
+import java.text.ParseException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.emdev.wallet.model.Account;
 import com.emdev.wallet.model.Deposit;
 import com.emdev.wallet.model.Incomings;
 import com.emdev.wallet.model.Movements;
 import com.emdev.wallet.repository.AccountRepository;
 import com.emdev.wallet.repository.DepositRepository;
+
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 
 @Service
 @Transactional
@@ -41,15 +40,13 @@ public class IDepositService implements DepositService {
 
         Deposit newDeposit = new Deposit(deposit.getAmount(), deposit.getDescription());
         Incomings newIncoming = new Incomings(newDeposit.getDate(), newDeposit.getAmount(), account.getAccountId());
-        Movements newMovements = new Movements(deposit.getAmount(), deposit.getDescription(),newDeposit.getDate(),newDeposit.getType());
+        Movements newMovements = new Movements(deposit.getAmount(), deposit.getDescription(), newDeposit.getDate(),
+                newDeposit.getType());
         newMovements.getIncomings().add(newIncoming);
-
 
         account.setBalance(newDeposit.getAmount());
         account.getDeposits().add(newDeposit);
         account.getMovements().add(newMovements);
-
-
 
         return depositRepository.save(newDeposit);
 
