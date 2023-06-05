@@ -2,12 +2,14 @@ package com.emdev.wallet.auth;
 
 import java.util.ArrayList;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.emdev.wallet.config.JwtService;
+import com.emdev.wallet.exceptions.RequestException;
 import com.emdev.wallet.model.Account;
 import com.emdev.wallet.user.Role;
 import com.emdev.wallet.user.User;
@@ -49,10 +51,18 @@ public class AuthenticationService {
         }
 
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                                request.getEmail(),
-                                request.getPassword()));
-                var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+                try {
+                        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                                        request.getEmail(),
+                                        request.getPassword()));
+                } catch (Exception e) {
+
+                        throw new RequestException("Credenciales incorrectas", "P-400",
+                                        HttpStatus.BAD_REQUEST);
+                }
+                var user = userRepository.findByEmail(request.getEmail())
+                                .orElseThrow(() -> new RequestException("Email no registrado", "P-401",
+                                                HttpStatus.INTERNAL_SERVER_ERROR));
 
                 var jwtToken = jwtService.generateToken(user);
                 return AuthenticationResponse.builder()
