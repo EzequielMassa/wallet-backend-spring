@@ -1,6 +1,7 @@
 package com.emdev.wallet.auth;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,9 +28,14 @@ public class AuthenticationService {
         private final AuthenticationManager authenticationManager;
 
         public AuthenticationResponse register(RegisterRequest request) {
-                var accounts = new ArrayList<Account>();
-                accounts.add(new Account());
-                var user = User.builder()
+                Optional<User> usuarioOpt = userRepository.findByEmail(request.getEmail());
+                if (usuarioOpt.isPresent()) {
+                        throw new RequestException("Ya existe un usuario con ese correo", "P-409",
+                                HttpStatus.CONFLICT);
+                }else {
+                        var accounts = new ArrayList<Account>();
+                        accounts.add(new Account());
+                        var newUser = User.builder()
                                 .firstName(request.getFirstname())
                                 .lastName(request.getLastname())
                                 .email(request.getEmail())
@@ -38,16 +44,17 @@ public class AuthenticationService {
                                 .accounts(accounts)
                                 .urlImg(request.getUrlImg())
                                 .build();
-                userRepository.save(user);
-                var jwtToken = jwtService.generateToken(user);
-                return AuthenticationResponse.builder()
-                                .id(user.getId())
-                                .firstname(user.getFirstName())
-                                .lastname(user.getLastName())
-                                .email(user.getUsername())
+                        userRepository.save(newUser);
+                        var jwtToken = jwtService.generateToken(newUser);
+                        return AuthenticationResponse.builder()
+                                .id(newUser.getId())
+                                .firstname(newUser.getFirstName())
+                                .lastname(newUser.getLastName())
+                                .email(newUser.getUsername())
                                 .token(jwtToken)
-                                .urlImg(user.getUrlImg())
+                                .urlImg(newUser.getUrlImg())
                                 .build();
+                }
         }
 
         public AuthenticationResponse authenticate(AuthenticationRequest request) {
