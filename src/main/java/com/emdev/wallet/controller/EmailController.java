@@ -1,22 +1,28 @@
 package com.emdev.wallet.controller;
 
-import com.emdev.wallet.dto.ChangePasswordDto;
-import com.emdev.wallet.dto.EmailValuesDto;
-import com.emdev.wallet.service.EmailService;
-import com.emdev.wallet.user.User;
-import com.emdev.wallet.user.UserService;
-import com.emdev.wallet.utils.Mensaje;
-import jakarta.validation.Valid;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-import java.util.UUID;
+import com.emdev.wallet.dto.ChangePasswordDto;
+import com.emdev.wallet.dto.EmailValuesDto;
+import com.emdev.wallet.exceptions.RequestException;
+import com.emdev.wallet.service.EmailService;
+import com.emdev.wallet.user.User;
+import com.emdev.wallet.user.UserService;
+import com.emdev.wallet.utils.Mensaje;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -33,14 +39,16 @@ public class EmailController {
     @Value("${spring.mail.username}")
     private String emailFrom;
 
-
     private static final String subject = "Cambio de contraseña";
+
     @PostMapping("/password-forgot")
     public ResponseEntity<?> sendEmailTemplate(@RequestBody EmailValuesDto dto) {
         Optional<User> usuarioOpt = userService.getUserByEmail(dto.getMailTo());
-       if (!usuarioOpt.isPresent())
-           return new ResponseEntity<>(new Mensaje("No existe el usuario con ese correo"), HttpStatus.NOT_FOUND);
-       User usuario = usuarioOpt.get();
+        if (!usuarioOpt.isPresent())
+            throw new RequestException("No existe el usuario con ese correo", "P-404",
+                    HttpStatus.NOT_FOUND);
+
+        User usuario = usuarioOpt.get();
 
         dto.setMailFrom(emailFrom);
         dto.setSubject(subject);
@@ -57,20 +65,26 @@ public class EmailController {
 
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDto dto, BindingResult bindingResult) {
-         if (bindingResult.hasErrors()){
-             return new ResponseEntity<>(new Mensaje("Campos invalidos"), HttpStatus.BAD_REQUEST);
-         }
-         if (!dto.getPassword().equals(dto.getConfirmPassword())){
-             return new ResponseEntity<>(new Mensaje("Las contraseñas no coinciden"), HttpStatus.BAD_REQUEST);
-         }
-         Optional<User> usuarioOpt = userService.getUserByTokenPassword(dto.getTokenPassword());
+        if (bindingResult.hasErrors()) {
+
+            throw new RequestException("Campos invalidos", "P-400",
+                    HttpStatus.BAD_REQUEST);
+        }
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+
+            throw new RequestException("Las contraseñas no coinciden", "P-400",
+                    HttpStatus.BAD_REQUEST);
+        }
+        Optional<User> usuarioOpt = userService.getUserByTokenPassword(dto.getTokenPassword());
         if (!usuarioOpt.isPresent())
-            return new ResponseEntity<>(new Mensaje("No existe el usuario"), HttpStatus.NOT_FOUND);
+
+            throw new RequestException("No existe el usuario", "P-404",
+                    HttpStatus.NOT_FOUND);
         User usuario = usuarioOpt.get();
         String newPassword = passwordEncoder.encode(dto.getPassword());
         usuario.setPassword(newPassword);
         usuario.setTokenPassword(null);
         userService.save(usuario);
-        return new ResponseEntity<>(new Mensaje("Contraseña actualizada con exito"),HttpStatus.OK);
+        return new ResponseEntity<>(new Mensaje("Contraseña actualizada con exito"), HttpStatus.OK);
     }
 }

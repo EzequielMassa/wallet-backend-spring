@@ -61,7 +61,7 @@ public class AuthenticationService {
                                         HttpStatus.BAD_REQUEST);
                 }
                 var user = userRepository.findByEmail(request.getEmail())
-                                .orElseThrow(() -> new RequestException("Email no registrado", "P-401",
+                                .orElseThrow(() -> new RequestException("Email no registrado", "P-500",
                                                 HttpStatus.INTERNAL_SERVER_ERROR));
 
                 var jwtToken = jwtService.generateToken(user);
