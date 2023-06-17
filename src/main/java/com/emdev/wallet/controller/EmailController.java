@@ -39,13 +39,13 @@ public class EmailController {
     @Value("${spring.mail.username}")
     private String emailFrom;
 
-    private static final String subject = "Cambio de contraseña";
+    private static final String subject = "Change Password";
 
     @PostMapping("/password-forgot")
     public ResponseEntity<?> sendEmailTemplate(@RequestBody EmailValuesDto dto) {
         Optional<User> usuarioOpt = userService.getUserByEmail(dto.getMailTo());
         if (!usuarioOpt.isPresent())
-            throw new RequestException("No existe el usuario con ese correo", "P-404",
+            throw new RequestException("\n" + "The user with that email does not exist", "P-404",
                     HttpStatus.NOT_FOUND);
 
         User usuario = usuarioOpt.get();
@@ -60,31 +60,35 @@ public class EmailController {
         usuario.setTokenPassword(tokenPassword);
         userService.save(usuario);
         emailService.sendEmail(dto);
-        return new ResponseEntity<>(new Mensaje("Te hemos enviado un correo"), HttpStatus.OK);
+        return new ResponseEntity<>(new Mensaje("\n" +
+                "We have sent you an email"), HttpStatus.OK);
     }
 
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDto dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
 
-            throw new RequestException("Campos invalidos", "P-400",
+            throw new RequestException("\n" +
+                    "Invalid fields", "P-400",
                     HttpStatus.BAD_REQUEST);
         }
         if (!dto.getPassword().equals(dto.getConfirmPassword())) {
 
-            throw new RequestException("Las contraseñas no coinciden", "P-400",
+            throw new RequestException("\n" +
+                    "Passwords do not match", "P-400",
                     HttpStatus.BAD_REQUEST);
         }
         Optional<User> usuarioOpt = userService.getUserByTokenPassword(dto.getTokenPassword());
         if (!usuarioOpt.isPresent())
 
-            throw new RequestException("No existe el usuario", "P-404",
+            throw new RequestException("\n" +
+                    "The user does not exist", "P-404",
                     HttpStatus.NOT_FOUND);
         User usuario = usuarioOpt.get();
         String newPassword = passwordEncoder.encode(dto.getPassword());
         usuario.setPassword(newPassword);
         usuario.setTokenPassword(null);
         userService.save(usuario);
-        return new ResponseEntity<>(new Mensaje("Contraseña actualizada con exito"), HttpStatus.OK);
+        return new ResponseEntity<>(new Mensaje("Password updated successfully"), HttpStatus.OK);
     }
 }

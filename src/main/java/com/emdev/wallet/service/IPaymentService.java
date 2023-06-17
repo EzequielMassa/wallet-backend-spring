@@ -38,7 +38,8 @@ public class IPaymentService implements PaymentService {
         Payment newPayment = new Payment(payment.getAmount(),payment.getDescription());
 
         if(account.getBalance() < newPayment.getAmount()) {
-            throw  new Exception("saldo insuficiente");
+            throw  new Exception("\n" +
+                    "Insufficient balance");
         }
 
         try {

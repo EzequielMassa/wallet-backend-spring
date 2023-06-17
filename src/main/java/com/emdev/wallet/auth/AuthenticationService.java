@@ -30,7 +30,7 @@ public class AuthenticationService {
         public AuthenticationResponse register(RegisterRequest request) {
                 Optional<User> usuarioOpt = userRepository.findByEmail(request.getEmail());
                 if (usuarioOpt.isPresent()) {
-                        throw new RequestException("Ya existe un usuario con ese correo", "P-409",
+                        throw new RequestException("There is already a user with that email", "P-409",
                                 HttpStatus.CONFLICT);
                 }else {
                         var accounts = new ArrayList<Account>();
@@ -64,11 +64,11 @@ public class AuthenticationService {
                                         request.getPassword()));
                 } catch (Exception e) {
 
-                        throw new RequestException("Credenciales incorrectas", "P-400",
+                        throw new RequestException("Bad credentials", "P-400",
                                         HttpStatus.BAD_REQUEST);
                 }
                 var user = userRepository.findByEmail(request.getEmail())
-                                .orElseThrow(() -> new RequestException("Email no registrado", "P-500",
+                                .orElseThrow(() -> new RequestException("Email not registered", "P-500",
                                                 HttpStatus.INTERNAL_SERVER_ERROR));
 
                 var jwtToken = jwtService.generateToken(user);

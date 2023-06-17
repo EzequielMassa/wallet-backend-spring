@@ -42,7 +42,8 @@ public class ITransferService implements TransferService {
         Account destinyAccount = accountRepository.findByAccountId(accountDestinyId).orElse(null);
 
         if (originAccount.getBalance() < transfer.getAmount()) {
-            throw new Exception("saldo insuficiente");
+            throw new Exception("\n" +
+                    "Insufficient balance");
         }
         try {
             Transfer newTransferOrigin = new Transfer(transfer.getAmount(), transfer.getDescription(),
