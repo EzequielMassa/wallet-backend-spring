@@ -35,6 +35,5 @@ public class PaymentController {
             Payment newPayment = paymentService.createPayment(id,payment);
             return new ResponseEntity<>(newPayment, HttpStatus.OK);
 
-
     }
 }

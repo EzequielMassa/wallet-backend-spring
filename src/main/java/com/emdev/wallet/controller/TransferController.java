@@ -31,12 +31,9 @@ public class TransferController {
 
     @PostMapping("/newTransfer/origin/{accountOriginId}/destiny/{accountDestinyId}")
     public ResponseEntity<Transfer> createDeposit(@PathVariable("accountOriginId") Integer accountOriginId ,@PathVariable("accountDestinyId") Integer accountDestinyId ,@RequestBody Transfer transfer) throws Exception {
-        try{
+
             Transfer newTransfer = transferService.createTransfer(accountOriginId,accountDestinyId,transfer);
             return new ResponseEntity<>(newTransfer, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(transfer, HttpStatus.BAD_REQUEST);
-        }
 
     }
 

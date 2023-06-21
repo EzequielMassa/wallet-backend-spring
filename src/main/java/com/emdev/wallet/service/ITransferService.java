@@ -2,7 +2,9 @@ package com.emdev.wallet.service;
 
 import java.util.List;
 
+import com.emdev.wallet.exceptions.RequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.emdev.wallet.model.Account;
@@ -42,8 +44,8 @@ public class ITransferService implements TransferService {
         Account destinyAccount = accountRepository.findByAccountId(accountDestinyId).orElse(null);
 
         if (originAccount.getBalance() < transfer.getAmount()) {
-            throw new Exception("\n" +
-                    "Insufficient balance");
+            throw new RequestException(" Insufficient balance", "P-402",
+                    HttpStatus.PAYMENT_REQUIRED);
         }
         try {
             Transfer newTransferOrigin = new Transfer(transfer.getAmount(), transfer.getDescription(),
