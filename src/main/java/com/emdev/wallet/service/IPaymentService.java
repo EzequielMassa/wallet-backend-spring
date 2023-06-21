@@ -1,5 +1,6 @@
 package com.emdev.wallet.service;
 
+import com.emdev.wallet.exceptions.RequestException;
 import com.emdev.wallet.model.Account;
 import com.emdev.wallet.model.Expenses;
 import com.emdev.wallet.model.Movements;
@@ -8,6 +9,7 @@ import com.emdev.wallet.repository.AccountRepository;
 import com.emdev.wallet.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,8 +40,8 @@ public class IPaymentService implements PaymentService {
         Payment newPayment = new Payment(payment.getAmount(),payment.getDescription());
 
         if(account.getBalance() < newPayment.getAmount()) {
-            throw  new Exception("\n" +
-                    "Insufficient balance");
+            throw new RequestException(" Insufficient balance", "P-402",
+                    HttpStatus.PAYMENT_REQUIRED);
         }
 
         try {

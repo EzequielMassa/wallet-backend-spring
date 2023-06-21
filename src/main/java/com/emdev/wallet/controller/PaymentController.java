@@ -31,12 +31,10 @@ public class PaymentController {
 
     @PostMapping("/newPayment/{id}")
     public ResponseEntity<Payment> createDeposit(@PathVariable("id") Integer id, @RequestBody Payment payment) throws Exception {
-        try{
+
             Payment newPayment = paymentService.createPayment(id,payment);
             return new ResponseEntity<>(newPayment, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(payment, HttpStatus.BAD_REQUEST);
-        }
+
 
     }
 }
