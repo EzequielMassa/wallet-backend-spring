@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,6 +17,17 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserDTO> userDTOs = new ArrayList<>();
+
+        for (User user : users) {
+            userDTOs.add(new UserDTO(user.getId(),user.getFirstName(),user.getLastName(),user.getEmail(),user.getUrlImg(),user.getAccounts()));
+        }
+        return userDTOs;
+
+    }
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
