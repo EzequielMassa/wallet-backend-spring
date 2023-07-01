@@ -2,7 +2,9 @@ package com.emdev.wallet.user;
 
 import com.emdev.wallet.auth.AuthenticationResponse;
 import com.emdev.wallet.config.JwtService;
+import com.emdev.wallet.exceptions.RequestException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +46,7 @@ public class UserService {
     }
 
     public AuthenticationResponse updateUser(UserRequest request) {
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        var user = userRepository.findByEmail(request.getEmail()).orElseThrow(()-> new RequestException("The requested user does not exist", "P-404", HttpStatus.NOT_FOUND));
         var pass = request.getPassword();
         User updatedUser;
 

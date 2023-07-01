@@ -3,6 +3,10 @@ package com.emdev.wallet.controller;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name="1. Auth endpoints")
 public class EmailController {
     @Autowired
     EmailService emailService;
@@ -41,6 +46,11 @@ public class EmailController {
 
     private static final String subject = "Change Password";
 
+    @Operation(summary = "password forgot", description = "Send email to reset password")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Email sent successfully"),
+            @ApiResponse(responseCode = "404", description = "The user with that email does not exist")
+    })
     @PostMapping("/password-forgot")
     public ResponseEntity<?> sendEmailTemplate(@RequestBody EmailValuesDto dto) {
         Optional<User> usuarioOpt = userService.getUserByEmail(dto.getMailTo());
@@ -64,6 +74,13 @@ public class EmailController {
                 "We have sent you an email"), HttpStatus.OK);
     }
 
+    @Operation(summary = "change password", description = "Update user password")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Password updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid fields"),
+            @ApiResponse(responseCode = "406", description = "Passwords do not match"),
+            @ApiResponse(responseCode = "404", description = "The user does not exist")
+    })
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDto dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -75,8 +92,8 @@ public class EmailController {
         if (!dto.getPassword().equals(dto.getConfirmPassword())) {
 
             throw new RequestException("\n" +
-                    "Passwords do not match", "P-400",
-                    HttpStatus.BAD_REQUEST);
+                    "Passwords do not match", "P-406",
+                    HttpStatus.NOT_ACCEPTABLE);
         }
         Optional<User> usuarioOpt = userService.getUserByTokenPassword(dto.getTokenPassword());
         if (!usuarioOpt.isPresent())

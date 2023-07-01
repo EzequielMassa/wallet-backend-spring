@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.servers.Server;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "User API", version = "1.0", contact = @Contact(name = "EmDev", email = "ezequielmassa.dev@gmail.com", url = "https://www.baeldung.com"), license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0"), termsOfService = "", description = "api testing swagger"), servers = @Server(url = "http://localhost:8080", description = "Development"))
+@OpenAPIDefinition(info = @Info(title = "User API", version = "1.0", contact = @Contact(name = "EmDev", email = "ezequielmassa.dev@gmail.com", url = "https://www.linkedin.com/in/ezequiel-massa-dev/"), license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0"), termsOfService = "", description = "api testing  wallet swagger"), servers = @Server(url = "http://localhost:8080", description = "Development"))
 public class OpenAPISecurityConfiguration {
 
 }

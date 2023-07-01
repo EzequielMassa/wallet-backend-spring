@@ -1,6 +1,7 @@
 package com.emdev.wallet.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.emdev.wallet.exceptions.RequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,22 +30,42 @@ public class ITransferService implements TransferService {
 
     @Override
     public List<Transfer> getAccountTransfers(Integer accountId) {
+        Optional<Account> account = accountRepository.findById(accountId);
+        if (!account.isPresent()) {
+            throw new RequestException("The requested account does not exist", "P-404",
+                    HttpStatus.NOT_FOUND);
+        }
         return accountRepository.findTransfersByAccount(accountId);
     }
 
     @Override
     public Transfer getTransfer(Integer transferId) {
-        return transferRepository.findById(transferId).orElse(null);
+        Optional<Transfer> transfer = transferRepository.findById(transferId);
+        if (!transfer.isPresent()) {
+            throw new RequestException("The requested transfer does not exist", "P-404",
+                    HttpStatus.NOT_FOUND);
+        }
+        return transfer.get();
     }
 
     @Override
     public Transfer createTransfer(Integer accountOriginId, Integer accountDestinyId, Transfer transfer)
             throws Exception {
-        Account originAccount = accountRepository.findByAccountId(accountOriginId).orElse(null);
-        Account destinyAccount = accountRepository.findByAccountId(accountDestinyId).orElse(null);
 
-        if (originAccount.getBalance() < transfer.getAmount()) {
-            throw new RequestException(" Insufficient balance", "P-402",
+        Optional<Account> originAccount = accountRepository.findById(accountOriginId);
+        if (!originAccount.isPresent()) {
+            throw new RequestException("The origin account does not exist", "P-404",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        Optional<Account> destinyAccount = accountRepository.findByAccountId(accountDestinyId);
+        if (!destinyAccount.isPresent()) {
+            throw new RequestException("The destiny account does not exist", "P-404",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if (originAccount.get().getBalance() < transfer.getAmount()) {
+            throw new RequestException("Insufficient balance", "P-402",
                     HttpStatus.PAYMENT_REQUIRED);
         }
         try {
@@ -56,21 +77,21 @@ public class ITransferService implements TransferService {
                     newTransferOrigin.getDate(),
                     newTransferOrigin.getType());
             Expenses newExpense = new Expenses(newTransferOrigin.getDate(), newTransferOrigin.getAmount(),
-                    originAccount.getAccountId());
+                    originAccount.get().getAccountId());
             newMovementsOrigin.getExpenses().add(newExpense);
             Movements newMovementsDestiny = new Movements(transfer.getAmount(), transfer.getDescription(),
                     newTransferDestiny.getDate(),
                     newTransferDestiny.getType());
             Incomings newIncoming = new Incomings(newTransferDestiny.getDate(), newTransferDestiny.getAmount(),
-                    destinyAccount.getAccountId());
+                    destinyAccount.get().getAccountId());
             newMovementsDestiny.getIncomings().add(newIncoming);
 
-            originAccount.setPayment(transfer.getAmount());
-            destinyAccount.setBalance(transfer.getAmount());
-            originAccount.getTransfers().add(newTransferOrigin);
-            originAccount.getMovements().add(newMovementsOrigin);
-            destinyAccount.getTransfers().add(newTransferDestiny);
-            destinyAccount.getMovements().add(newMovementsDestiny);
+            originAccount.get().setPayment(transfer.getAmount());
+            destinyAccount.get().setBalance(transfer.getAmount());
+            originAccount.get().getTransfers().add(newTransferOrigin);
+            originAccount.get().getMovements().add(newMovementsOrigin);
+            destinyAccount.get().getTransfers().add(newTransferDestiny);
+            destinyAccount.get().getMovements().add(newMovementsDestiny);
 
             transferRepository.save(newTransferDestiny);
 
