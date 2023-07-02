@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
-@Tag(name="6. Users endpoints",description = "Get/Update user endpoints")
+@Tag(name="7. Users endpoints",description = "Get/Update user endpoints")
 public class UserController {
 
     private final UserService service;

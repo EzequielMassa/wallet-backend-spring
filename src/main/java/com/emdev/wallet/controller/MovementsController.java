@@ -7,6 +7,7 @@ import com.emdev.wallet.model.Incomings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import com.emdev.wallet.service.IMovementsService;
 
 @RestController
 @RequestMapping("/api/v1/movements")
+@Tag(name="6. Account movements endpoints",description = "Get account movements endpoints")
 public class MovementsController {
 
     @Autowired
