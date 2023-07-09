@@ -52,10 +52,10 @@ public class EmailController {
             @ApiResponse(responseCode = "404", description = "The user with that email does not exist")
     })
     @PostMapping("/password-forgot")
-    public ResponseEntity<?> sendEmailTemplate(@RequestBody EmailValuesDto dto) {
+    public ResponseEntity<?> sendEmailTemplate(@Valid @RequestBody EmailValuesDto dto) {
         Optional<User> usuarioOpt = userService.getUserByEmail(dto.getMailTo());
         if (!usuarioOpt.isPresent())
-            throw new RequestException("\n" + "The user with that email does not exist", "P-404",
+            throw new RequestException("The user with that email does not exist", "P-404",
                     HttpStatus.NOT_FOUND);
 
         User usuario = usuarioOpt.get();
@@ -70,8 +70,7 @@ public class EmailController {
         usuario.setTokenPassword(tokenPassword);
         userService.save(usuario);
         emailService.sendEmail(dto);
-        return new ResponseEntity<>(new Mensaje("\n" +
-                "We have sent you an email"), HttpStatus.OK);
+        return new ResponseEntity<>(new Mensaje("We have sent you an email"), HttpStatus.OK);
     }
 
     @Operation(summary = "change password", description = "Update user password")
@@ -85,21 +84,18 @@ public class EmailController {
     public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordDto dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
 
-            throw new RequestException("\n" +
-                    "Invalid fields", "P-400",
+            throw new RequestException("Invalid fields", "P-400",
                     HttpStatus.BAD_REQUEST);
         }
         if (!dto.getPassword().equals(dto.getConfirmPassword())) {
 
-            throw new RequestException("\n" +
-                    "Passwords do not match", "P-406",
+            throw new RequestException("Passwords do not match", "P-406",
                     HttpStatus.NOT_ACCEPTABLE);
         }
         Optional<User> usuarioOpt = userService.getUserByTokenPassword(dto.getTokenPassword());
         if (!usuarioOpt.isPresent())
 
-            throw new RequestException("\n" +
-                    "The user does not exist", "P-404",
+            throw new RequestException("The user does not exist", "P-404",
                     HttpStatus.NOT_FOUND);
         User usuario = usuarioOpt.get();
         String newPassword = passwordEncoder.encode(dto.getPassword());

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class PaymentController {
 
     })
     @PostMapping("/newPayment/{id}")
-    public ResponseEntity<Payment> createDeposit(@PathVariable("id") Integer id, @RequestBody Payment payment) throws Exception {
+    public ResponseEntity<Payment> createDeposit(@PathVariable("id") Integer id, @Valid @RequestBody Payment payment) throws Exception {
 
         Payment newPayment = paymentService.createPayment(id, payment);
         return new ResponseEntity<>(newPayment, HttpStatus.OK);

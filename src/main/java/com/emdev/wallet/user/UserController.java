@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found"),
     })
     @PutMapping("/update")
-    public ResponseEntity<AuthenticationResponse> updateUser(@RequestBody UserRequest request) {
+    public ResponseEntity<AuthenticationResponse> updateUser(@Valid  @RequestBody UserRequest request) {
         return ResponseEntity.ok(service.updateUser(request));
     }
 }

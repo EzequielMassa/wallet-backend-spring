@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class DepositController {
             @ApiResponse(responseCode = "404", description = "Account not found"),
     })
     @PostMapping("/newDeposit/{id}")
-    public ResponseEntity<Deposit> createDeposit(@PathVariable("id") Integer id,@RequestBody Deposit deposit) throws ParseException {
+    public ResponseEntity<Deposit> createDeposit(@PathVariable("id") Integer id,@Valid  @RequestBody Deposit deposit) throws ParseException {
         Deposit newDeposit = depositService.createDeposit(id,deposit);
         return ResponseEntity.ok(newDeposit);
     }

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class TransferController {
             @ApiResponse(responseCode = "402", description = "Insufficient balance"),
     })
     @PostMapping("/newTransfer/origin/{accountOriginId}/destiny/{accountDestinyId}")
-    public ResponseEntity<Transfer> createDeposit(@PathVariable("accountOriginId") Integer accountOriginId ,@PathVariable("accountDestinyId") Integer accountDestinyId ,@RequestBody Transfer transfer) throws Exception {
+    public ResponseEntity<Transfer> createDeposit(@PathVariable("accountOriginId") Integer accountOriginId ,@PathVariable("accountDestinyId") Integer accountDestinyId ,@Valid  @RequestBody Transfer transfer) throws Exception {
 
             Transfer newTransfer = transferService.createTransfer(accountOriginId,accountDestinyId,transfer);
             return new ResponseEntity<>(newTransfer, HttpStatus.OK);
