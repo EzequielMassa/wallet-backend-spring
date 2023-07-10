@@ -11,13 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmailValuesDto {
-    @Email(message = "Email format is not valid")
-    @Pattern(regexp=".+@.+\\..+", message="Please provide a valid email address")
-    @NotBlank(message = "Email is required")
+
     private String mailFrom;
-    @Email(message = "Email format is not valid")
-    @Pattern(regexp=".+@.+\\..+", message="Please provide a valid email address")
-    @NotBlank(message = "Email is required")
     private String mailTo;
     private String subject;
     private String userName;

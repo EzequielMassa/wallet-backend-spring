@@ -52,7 +52,7 @@ public class EmailController {
             @ApiResponse(responseCode = "404", description = "The user with that email does not exist")
     })
     @PostMapping("/password-forgot")
-    public ResponseEntity<?> sendEmailTemplate(@Valid @RequestBody EmailValuesDto dto) {
+    public ResponseEntity<?> sendEmailTemplate( @RequestBody EmailValuesDto dto) {
         Optional<User> usuarioOpt = userService.getUserByEmail(dto.getMailTo());
         if (!usuarioOpt.isPresent())
             throw new RequestException("The user with that email does not exist", "P-404",
