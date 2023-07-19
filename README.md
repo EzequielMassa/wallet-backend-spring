@@ -5,65 +5,65 @@
 <h2>Complete swagger detaileds endpoints documentation:</h2>
 http://wallet-v1-env.eba-ipztfzcp.us-east-1.elasticbeanstalk.com/swagger-ui/index.html
 
-<h2>Principales funciones de la api rest:</h2>
+<h2>Main functions of the rest api:</h2>
 <ul>
   <li>
-    creacion de nuevos usuarios
+    creation of new users
   </li>
    <li>
-    verificacion de correcto login con credenciales
+    verification of correct login with credentials
   </li>
    <li>
-    email de recupero de contraseña
+    password recovery email
   </li>
    <li>
-    edicion del perfil del usuario
+  edit user profile
   </li>
    <li>
-    creacion de nuevas cuentas
+   creation of new accounts
   </li>
    <li>
-    transacciones de cuenta (depositos , pagos , transferencias)
+    account transactions (deposits, payments, transfers)
   </li>
 </ul>
 
-<h2>Principales caracteristicas tecnicas:</h2>
+<h2>Main technical characteristics:</h2>
 <ul>
   <li>
-    implementacion de patron mvc
+    mvc pattern implementation
   </li>
   <li>
-    autenticacion con jwt
+    authentication with jwt
   </li>
   <li>
-    manejo de errores mediante sus correctas excepciones (http status code + mensaje)
+    error handling through its correct exceptions (http status code + message)
   </li>
   <li>
-   modelado de datos mediante DTO
+   data modeling using DTO
   </li>
   <li>
-   validaciones de campos de hibernate
+   hibernate field validations
   </li>
   <li>
-   relaciones entre tablas
+ relationships between tables
   </li>
   <li>
    custom JPA QUERYS
   </li>
     <li>
-   implementacion de java mail sender + thymeleaf para enviar email de solicitud de "password olvidado"
+implementation of java mail sender + thymeleaf to send "forgotten password" request email
   </li>
     </li>
     <li>
-    documentacion de endpoints completa mediante api swagger (con orden)
+    complete endpoints documentation via swagger api (with order)
   </li>
    </li>
     <li>
-   desarrollado en Java 17 y Spring Boot 3.0.4
+  developed in Java 17 and Spring Boot 3.0.4
   </li>
 </ul>
 
-<h3>Dependencias y otros recursos utilizados:
+<h3>Dependencies and other resources used:
 </h3>
 <ul>
     <li>
