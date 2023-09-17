@@ -3,7 +3,7 @@
 ![Proyecto nuevo](https://github.com/EzequielMassa/wallet-frontend-angular/assets/94617066/da130ae4-73d5-445b-aef9-333e6bb326aa)
 
 <h2>Complete swagger detaileds endpoints documentation:</h2>
-http://wallet-v1-env.eba-ipztfzcp.us-east-1.elasticbeanstalk.com/swagger-ui/index.html
+https://emdev-wallet-ezequielmassa.koyeb.app/swagger-ui/index.html
 
 <h2>Main functions of the rest api:</h2>
 <ul>
