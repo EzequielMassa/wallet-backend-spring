@@ -5,7 +5,7 @@
 <h2><a href="https://wallet-emdev.web.app/" target="blank">🚨 Live Demo</a></h2>
 
 <h2>Complete swagger detaileds endpoints documentation:</h2>
-https://wallet-render-ev4v.onrender.com/swagger-ui/index.html
+https://wallet-ezequielmassa.koyeb.app/swagger-ui/index.html
 
 <h2>Main functions of the rest api:</h2>
 <ul>
